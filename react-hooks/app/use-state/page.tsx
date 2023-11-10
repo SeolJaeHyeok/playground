@@ -1,9 +1,12 @@
 'use client';
 
+import UseStateTestComponent from '@/components/use-state-component';
 import { useEffect, useState } from 'react';
 
-export default function page() {
+export default function Page() {
     const [state, setState] = useState(0);
+
+    console.log('페이지 렌더링', state);
 
     useEffect(() => {
         setState((prev) => prev + 1);
@@ -16,5 +19,10 @@ export default function page() {
         console.log('effect', state);
     }, []);
 
-    return <div>useState</div>;
+    return (
+        <div>
+            <UseStateTestComponent state={state} />
+            <button onClick={() => setState((prev) => prev + 1)}>클릭</button>
+        </div>
+    );
 }
