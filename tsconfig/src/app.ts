@@ -1,1 +1,1 @@
-export const a = () => console.log("Hello app");
+export const addNumber = (a: number, b: number): number => a + b;
