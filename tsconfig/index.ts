@@ -1,4 +1,4 @@
-import { addNumber } from "./src/app";
+import { addNumber } from "src/app";
 
 const add = () => addNumber(6, 7);
 
