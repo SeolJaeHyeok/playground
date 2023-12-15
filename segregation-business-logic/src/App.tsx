@@ -4,64 +4,66 @@ interface ITodo {
   text: string;
   completed: boolean;
 }
-
-// 계산
-const filterTodos = (todos: ITodo[], filter: string) => {
-  console.log('filter 외부')
-
-  if (filter === 'completed') {
-		return todos.filter((todo: ITodo) => todo.completed);
-	}
-  
-  if (filter === 'incomplete') {
-		return todos.filter((todo: ITodo) => !todo.completed);
-	}
-  return todos;
-};
-  
-// 계산
-const makeNewTodo = (input: string) => {
-  const newTodo = { text: input, completed: false };
-  console.log('make 외부')
-  return newTodo;
-}
-
-// 계산
-const toggleTodo = (todos: ITodo[], index: number) => {
-  const newTodos = [...todos];
-  newTodos[index].completed = !newTodos[index].completed;
-  console.log('toggle 외부')
-  return newTodos;
-}
-
-  // 계산
-const searchTodos = (todos: ITodo[], filter: string, searchQuery: string) => {
-  console.log("search 외부")
-  return filterTodos(todos, filter).filter((todo:ITodo) => todo.text.includes(searchQuery));
-};
+ 
+type TFilter = 'completed' | 'incomplete' | 'all'
 
 /**
- * 1. 계산(순수 함수) 외부로 추출
+ * 1. 계산(순수 함수) 컴포넌트 외부로 추출
+ * - 재사용이 가능, 단 이름 충돌의 가능성 높아진다.
  * - 암묵적 인자 제거 -> 예측 가능하게 변경
- * - 렌더링마다 선언되지 않으므로 useCallback 등의 처리가 필요하지 않음 -> 부분적으로 이점을 가져갈 수 있을듯 -> makeNewTodo, toggleTodo의 경우 해당 액션을 처리할 때만 호출이 되고 filterTodo, searchTodo의 경우 렌더링 단에서 사용하고 있어서 매번 호출 
+ * - 렌더링마다 생성되지 않으므로 메모이제이션 처리가 필요하지 않음 -> 컴포넌트 내부에서 사용하는 경우 리렌더가 발생할 때마다 매번 생성, 호출 발생하지만 외부로 추출하게 되면 한 번만 생성되어 호출된다.
+ *   - 렌더링마다 다시 생성될 필요가 없는 기능의 경우 이점을 가져갈 수 있을듯
+ * 2. View Model을 구성하여 컴포넌트 외부로 추출
+ * - 위의 장점을 가져가면서 로직을 한 공간(Controller)에 모아두어 응집도가 올라간다.
  */
+
+const TodosController = (todos: ITodo[]) => {
+  return {
+    get: () => todos,
+    add: (todo: ITodo) => ([...todos, todo]),
+    toggle: (index: number) => {
+      const newTodos = [...todos];
+      newTodos[index].completed = !newTodos[index].completed
+      return todos;
+    },
+    filter: (filter: TFilter) => {
+      if(filter === 'completed') {
+        return todos.filter((todo: ITodo) => todo.completed)
+      }
+
+      if(filter === 'incomplete') {
+        return todos.filter((todo: ITodo) => !todo.completed)
+
+      }
+      return todos;
+    },
+    search: (searchWord: string) => todos.filter((todo: ITodo) => todo.text.includes(searchWord))
+  }
+  
+}
+
 const TodoList = () => {
   const [todos, setTodos] = useState<ITodo[]>([]);
   const [input, setInput] = useState('');
-  const [filter, setFilter] = useState('all'); // all, completed, incomplete
+  const [filter, setFilter] = useState<TFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   
-  console.log('내부')
-  
-  // 액션
   const addTodo = () => {
-    setTodos([...todos, makeNewTodo(input)]);
+    const add = TodosController(todos).add({text: input, completed: false});
+    const newTodo = TodosController(add).get();
+    setTodos(newTodo);
     setInput('');
   };
 
-  // 액션
   const toggleComplete = (index: number) => {
-    setTodos(toggleTodo(todos,index));
+    const newTodos = TodosController(todos).toggle(index)
+    setTodos([...newTodos]);
+  };
+    
+
+  const searchTodos = () => {
+    const filteredTodo = TodosController(todos).filter(filter); 
+    return filteredTodo.filter((todo) => todo.text.includes(searchQuery));
   };
 
   return (
@@ -76,7 +78,7 @@ const TodoList = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       <ul>
-        {searchTodos(todos, filter, searchQuery).map((todo, index) => (
+        {searchTodos().map((todo, index) => (
           <li key={index}>
             {todo.text}{' '}
             <button onClick={() => toggleComplete(index)}>
