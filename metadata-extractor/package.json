@@ -1,0 +1,13 @@
+{
+  "name": "metadata-extractor",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "https": "^1.0.0"
+  }
+}

@@ -1,1 +1,1 @@
-// Hello World
+export { extractMetadata } from "./src/metadata-extractor"
