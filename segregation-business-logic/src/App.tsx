@@ -55,7 +55,7 @@ const TodoList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const addTodo = () => {
-    const newTodo = TodosController(todos).add({text: input, completed: false}).get;
+    const newTodo = TodosController(todos).add({text: input, completed: false}).get();
     setTodos(newTodo);
     setInput('');
   };
