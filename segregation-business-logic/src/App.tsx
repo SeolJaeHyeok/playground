@@ -20,24 +20,30 @@ type TFilter = 'completed' | 'incomplete' | 'all'
 const TodosController = (todos: ITodo[]) => {
   return {
     get: () => todos,
-    add: (todo: ITodo) => ([...todos, todo]),
+    add: (todo: ITodo) => {
+      return TodosController([...todos, todo])
+    },
     toggle: (index: number) => {
       const newTodos = [...todos];
       newTodos[index].completed = !newTodos[index].completed
-      return todos;
+      return TodosController(newTodos);
     },
     filter: (filter: TFilter) => {
       if(filter === 'completed') {
-        return todos.filter((todo: ITodo) => todo.completed)
+        return TodosController(todos.filter((todo: ITodo) => todo.completed))
       }
 
       if(filter === 'incomplete') {
-        return todos.filter((todo: ITodo) => !todo.completed)
+        return TodosController(todos.filter((todo: ITodo) => !todo.completed))
 
       }
-      return todos;
+      return TodosController(todos);
     },
-    search: (searchWord: string) => todos.filter((todo: ITodo) => todo.text.includes(searchWord))
+    search: (searchWord: string) => {
+      const searchedTodos = todos.filter((todo: ITodo) => todo.text.includes(searchWord))
+
+      return TodosController(searchedTodos)
+    }
   }
   
 }
@@ -49,36 +55,48 @@ const TodoList = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const addTodo = () => {
-    const add = TodosController(todos).add({text: input, completed: false});
-    const newTodo = TodosController(add).get();
+    const newTodo = TodosController(todos).add({text: input, completed: false}).get;
     setTodos(newTodo);
     setInput('');
   };
 
   const toggleComplete = (index: number) => {
-    const newTodos = TodosController(todos).toggle(index)
+    const newTodos = TodosController(todos).toggle(index).get()
     setTodos([...newTodos]);
   };
     
 
-  const searchTodos = () => {
-    const filteredTodo = TodosController(todos).filter(filter); 
-    return filteredTodo.filter((todo) => todo.text.includes(searchQuery));
+  const renderTodos = () => {
+    const filteredTodo = TodosController(todos).filter(filter).search(searchQuery).get(); 
+    return filteredTodo;
   };
+
+  const showAll = () => {
+    setFilter('all');
+  }
+
+  const showCompleted = () => {
+    setFilter('completed');
+
+  }
+
+  const showIncompleted = () => {
+    setFilter('incomplete')
+  }
 
   return (
     <>
       <input value={input} onChange={(e) => setInput(e.target.value)} />
       <button onClick={addTodo}>Add</button>
-      <button onClick={() => setFilter('all')}>Show All</button>
-      <button onClick={() => setFilter('completed')}>Show Completed</button>
-      <button onClick={() => setFilter('incomplete')}>Show Incomplete</button>
+      <button onClick={showAll}>Show All</button>
+      <button onClick={showCompleted}>Show Completed</button>
+      <button onClick={showIncompleted}>Show Incomplete</button>
       <input
         placeholder="Search..."
         onChange={(e) => setSearchQuery(e.target.value)}
       />
       <ul>
-        {searchTodos().map((todo, index) => (
+        {renderTodos().map((todo, index) => (
           <li key={index}>
             {todo.text}{' '}
             <button onClick={() => toggleComplete(index)}>
