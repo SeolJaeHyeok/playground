@@ -43,12 +43,15 @@ const HomePage = () => {
   );
 };
 
+// Uncontrolled Component
 const Name = ({data, onInputChange} : {data: Payload; onInputChange : (key: keyof Payload, value: string) => void}) => {
   const [_, setSearchParams] = useSearchParams();
   const name = useRef('');
   return (
     <div>
       <h2>Name</h2>
+      {/* state를 사용하지 않고 ref를 통해 렌더링을 발생시키지 않으면서 값을 입력받기 떄문에 value가 아닌 defaultValue를 통해 값이 입력된 경우를 보여줄 수 있도록 설정*/}
+      {/* ref가 아닌 state를 통해 관리한다면 value를 사용해도 된다. */}
       <input defaultValue={data.name ?? ""} onChange={(e) => name.current = e.target.value}/>
       <button onClick={() => {
         onInputChange('name', name.current)
