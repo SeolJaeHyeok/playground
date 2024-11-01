@@ -2,11 +2,19 @@ import { ChangeEvent, FormEvent, useReducer, useState } from 'react';
 
 interface ITodo {
   id: number;
-  desc: string;
-  isFinish: boolean;
+  desc?: string;
+  isFinish?: boolean;
+}
+interface TodoState {
+  todos: ITodo[];
 }
 
-const reducer = (state, action) => {
+interface TodoAction {
+  type: 'ADD_TODO' | 'DELETE_TODO' | 'UPDATE_TODO';
+  payload: ITodo;
+}
+
+const reducer = (state: TodoState, action: TodoAction) => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
@@ -23,7 +31,7 @@ const reducer = (state, action) => {
   }
 };
 
-const initialState = {
+const initialState: TodoState = {
   todos: [{ id: 1, desc: '예시입니다.', isFinish: false }],
 };
 
