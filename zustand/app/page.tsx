@@ -1,94 +1,69 @@
-import Image from 'next/image';
+'use client';
 
-import styles from './page.module.scss';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
-export default function Home() {
+const FilterComponent = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const searchParams = useSearchParams();
+    const router = useRouter();
+
+    // 체크박스 옵션들
+    const options = [
+        { id: 'option1', label: '옵션 1' },
+        { id: 'option2', label: '옵션 2' },
+        { id: 'option3', label: '옵션 3' },
+    ];
+
+    // URL에서 현재 선택된 카테고리들 가져오기
+    const getSelectedCategories = () => {
+        const category = searchParams.get('category');
+        return category ? category.split(',') : [];
+    };
+
+    // 체크박스 변경 핸들러
+    const handleCheckboxChange = (optionId: string) => {
+        const currentSelected = getSelectedCategories();
+        let newSelected;
+
+        if (currentSelected.includes(optionId)) {
+            newSelected = currentSelected.filter((id: string) => id !== optionId);
+        } else {
+            newSelected = [...currentSelected, optionId];
+        }
+
+        // URL 업데이트
+        const params = new URLSearchParams(searchParams.toString());
+        if (newSelected.length > 0) {
+            params.set('category', newSelected.join(','));
+        } else {
+            params.delete('category');
+        }
+        router.push(`?${params.toString()}`);
+    };
+
     return (
-        <main className={styles.main}>
-            <div className={styles.description}>
-                <p>
-                    Get started by editing&nbsp;
-                    <code className={styles.code}>app/page.tsx</code>
-                </p>
-                <div>
-                    <a
-                        href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        By{' '}
-                        <Image
-                            src="/vercel.svg"
-                            alt="Vercel Logo"
-                            className={styles.vercelLogo}
-                            width={100}
-                            height={24}
-                            priority
-                        />
-                    </a>
+        <div style={{ position: 'fixed', top: '50%', left: '50%' }} className="filter-container">
+            <button onClick={() => setIsOpen(!isOpen)} className="filter-button">
+                필터 {isOpen ? '닫기' : '열기'}
+            </button>
+
+            {isOpen && (
+                <div className="checkbox-container">
+                    {options.map((option) => (
+                        <label key={option.id} className="checkbox-label">
+                            <input
+                                type="checkbox"
+                                checked={getSelectedCategories().includes(option.id)}
+                                onChange={() => handleCheckboxChange(option.id)}
+                            />
+                            {option.label}
+                        </label>
+                    ))}
                 </div>
-            </div>
-
-            <div className={styles.center}>
-                <Image
-                    className={styles.logo}
-                    src="/next.svg"
-                    alt="Next.js Logo"
-                    width={180}
-                    height={37}
-                    priority
-                />
-            </div>
-
-            <div className={styles.grid}>
-                <a
-                    href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Docs <span>-&gt;</span>
-                    </h2>
-                    <p>Find in-depth information about Next.js features and API.</p>
-                </a>
-
-                <a
-                    href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Learn <span>-&gt;</span>
-                    </h2>
-                    <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-                </a>
-
-                <a
-                    href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Templates <span>-&gt;</span>
-                    </h2>
-                    <p>Explore the Next.js 13 playground.</p>
-                </a>
-
-                <a
-                    href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-                    className={styles.card}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <h2>
-                        Deploy <span>-&gt;</span>
-                    </h2>
-                    <p>Instantly deploy your Next.js site to a shareable URL with Vercel.</p>
-                </a>
-            </div>
-        </main>
+            )}
+        </div>
     );
-}
+};
+
+export default FilterComponent;
