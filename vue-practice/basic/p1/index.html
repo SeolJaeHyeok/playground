@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>구구단</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h4 v-if="liked">Like this Post</h4>
+    <h2 v-else="thumb">unthumb</h2>
+    <h2 v-if="thumb">thumb</h2>
+    <h4 v-else="liked">unlike this Post</h4>
+    <button @click="handleButtonClick()">{{buttonText}}</button>
+  </div>
+</body>
+<script>
+  const {createApp} = Vue;
+  
+  createApp({
+     data() {
+      return {
+        liked: false,
+        thumb: false,
+        buttonText: 'Like'
+      }
+     },
+     methods: {
+      onClickButton() {
+        this.liked = !this.liked
+      },
+      onClickThumb() {
+        this.thumb = !this.thumb
+      },
+      onClickChangeButtonText() {
+        if(this.liked) {
+          this.buttonText = 'unlike'
+        } else {
+          this.buttonText = 'like'
+        }
+      },
+      handleButtonClick() {
+        this.onClickButton();
+        this.onClickChangeButtonText();
+        this.onClickThumb();
+      }
+     }
+  }).mount('#app')
+</script>
+</html>
