@@ -8,44 +8,47 @@
 </head>
 <body>
   <div id="app">
-    <h4 v-if="liked">Like this Post</h4>
-    <h2 v-else="thumb">unthumb</h2>
-    <h2 v-if="thumb">thumb</h2>
-    <h4 v-else="liked">unlike this Post</h4>
-    <button @click="handleButtonClick()">{{buttonText}}</button>
+    <p>{{number.a}} 곱하기 {{number.b}}은?</p>
+    <input v-model="input" @change="handleUserInput" placeholder="정답을 입력하세요"/>
+    <button @click="handleSubmit">입력</button>
+    <p>{{isCorrect ? "정답" : "오답"}}</p>
   </div>
 </body>
 <script>
-  const {createApp} = Vue;
+  const { createApp } = Vue;
   
   createApp({
      data() {
       return {
-        liked: false,
-        thumb: false,
-        buttonText: 'Like'
+        number: {
+          a: 0,
+          b: 0
+        },
+        input: '',
+        isCorrect: false,
       }
      },
+  
      methods: {
-      onClickButton() {
-        this.liked = !this.liked
+      handleUserInput(e) {
+        this.input = e.target.value;
       },
-      onClickThumb() {
-        this.thumb = !this.thumb
+      makeRandomNumber() {
+        this.number.a = Math.floor(Math.random() * 10);
+        this.number.b = Math.floor(Math.random() * 10);
       },
-      onClickChangeButtonText() {
-        if(this.liked) {
-          this.buttonText = 'unlike'
-        } else {
-          this.buttonText = 'like'
-        }
+      handleSubmit() {
+        this.checkAnswer();
+        this.makeRandomNumber();
+        this.input = ''
       },
-      handleButtonClick() {
-        this.onClickButton();
-        this.onClickChangeButtonText();
-        this.onClickThumb();
+      checkAnswer() {
+        this.number.a * this.number.b === Number(this.input) ? this.isCorrect = true : this.isCorrect = false;
       }
-     }
+     },
+      mounted() {
+        this.makeRandomNumber();
+      },
   }).mount('#app')
 </script>
 </html>
