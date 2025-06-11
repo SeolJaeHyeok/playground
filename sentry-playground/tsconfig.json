@@ -1,0 +1,56 @@
+{
+    "compilerOptions": {
+        /* Type Checking */
+        "noFallthroughCasesInSwitch": true, // switch-case 문에서 fall through 발생 시 에러
+        "noImplicitAny": true, // 암시적인 any 타입 금지
+        "strictNullChecks": true, // 엄격한 Null 검사
+        "strict": true, // strict mode -> noImplicit~, strict~ 옵션 전부 켜기
+        "allowUnreachableCode": false, // 접근할 수 없는 코드에 대해 컴파일러 오류 발생
+        "noUnusedLocals": true, // 사용하지 않는 지역 변수가 있다면 에러 발생
+
+        /* Modules */
+        "module": "esnext", // 모듈 시스템 설정
+        "moduleResolution": "node", // 모듈 해석 방법 설정
+        "resolveJsonModule": true, //.json 인 모듈의 import를 허용
+        "baseUrl": ".", // 기본 경로 설정
+        "paths": {
+            "@/app/*": ["app/*"],
+            "@/apis/*": ["apis/*"],
+            "@/components/*": ["components/*"],
+            "@/config/*": ["configs/*"],
+            "@/hooks/*": ["hooks/*"],
+            "@/stores/*": ["stores/*"],
+            "@/types/*": ["types/*"],
+            "@/utils/*": ["utils/*"]
+        },
+
+        /* Emit */
+        "removeComments": true, // 컴파일 시 주석 제거
+        "noEmit": true, // 컴파일 후 빌드된 파일 생성하지 않음
+
+        /* JavaScript Support */
+        "allowJs": true, // js 파일 import 허용
+
+        /* Editor Support */
+        "plugins": [{ "name": "next" }, { "name": "typescript-plugin-css-modules" }],
+
+        /* Interop Constraints */
+        "allowSyntheticDefaultImports": true, // 명시적인 default export가 없음을 허용, 타입 검사만 수행
+        "esModuleInterop": true, // 모든 가져오기에 대한 네임스페이스 객체 생성을 통해 CommonJS와 ES 모듈 간의 상호 운용성을 제공
+        "isolatedModules": true, // 프로젝트 내에 모든 각각의 소스코드 파일을 모듈로 만들기를 강제
+
+        /* Language and Environment */
+        "target": "es5", // ECMAScript 목표 버전 설정
+        "lib": ["dom", "dom.iterable", "esnext"], //컴파일 과정에 사용될 라이브러리 파일 설정
+        "jsx": "preserve", // jx 코드 컴파일 방식 설정
+        "types": ["node", "jest", "@testing-library/jest-dom"],
+
+        /* Completeness */
+        "skipLibCheck": true, // 선언 파일(.d.ts) 타입 검사 스킵
+
+        /* Projects */
+        "incremental": true // 이전 컴파일 단계에서의 디스크의 파일로 정보를 읽거나 기록
+    },
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "exclude": ["node_modules"]
+}
