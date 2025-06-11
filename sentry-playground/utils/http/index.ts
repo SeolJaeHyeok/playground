@@ -9,6 +9,7 @@ import { stringify } from 'qs';
 
 import CustomError from '../custom-error';
 import NProgress from '../n-progress';
+import { logError } from '../sentry/logger.util';
 
 class HttpClient {
     private static readonly instance: HttpClient = new HttpClient();
@@ -92,6 +93,12 @@ class HttpClient {
             const response: AxiosResponse<T> = await this.axiosInstance.request<T>(mergedConfig);
             return response.data;
         } catch (error) {
+            logError(error, {
+                extra: {
+                    config: this.createConfig(config),
+                },
+            });
+
             if (isAxiosError(error)) {
                 throw new CustomError('Axios Error Occured!', { details: error });
             }
