@@ -12,6 +12,9 @@ export { default as InputGroup } from './InputGroup';
 export { default as ButtonGroup } from './ButtonGroup';
 export { default as TextGroup } from './TextGroup';
 
+// Layout
+export { default as Layout } from './Layout';
+
 // Type exports
 export type { default as InputProps } from './Input';
 export type { default as LabelProps } from './Label';

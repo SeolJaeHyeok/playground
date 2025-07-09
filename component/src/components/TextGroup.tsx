@@ -1,5 +1,6 @@
 import { forwardRef, type HTMLAttributes } from 'react';
 import Text from './Text';
+import { cn } from '../utils';
 
 interface TextGroupProps extends HTMLAttributes<HTMLDivElement> {
   // 제목
@@ -72,12 +73,12 @@ const TextGroup = forwardRef<HTMLDivElement, TextGroupProps>(
     const directionClass = directionStyles[direction];
     
     // 최종 클래스 조합
-    const groupClasses = [
+    const groupClasses = cn(
       directionClass,
       spacingClass,
       alignClass,
       className
-    ].filter(Boolean).join(' ');
+    );
 
     return (
       <div

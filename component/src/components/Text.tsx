@@ -1,4 +1,5 @@
 import { forwardRef, type HTMLAttributes, type ElementType, type ReactNode } from 'react';
+import { cn } from '../utils';
 
 // 가능한 HTML 요소들
 type TextElement = 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'strong' | 'em' | 'small';
@@ -117,7 +118,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
     const truncateClass = truncate ? 'truncate' : '';
     
     // 최종 클래스 조합
-    const textClasses = [
+    const textClasses = cn(
       sizeClass,
       weightClass,
       colorClass,
@@ -127,7 +128,7 @@ const Text = forwardRef<HTMLElement, TextProps>(
       transformClass,
       truncateClass,
       className
-    ].filter(Boolean).join(' ');
+    );
 
     // 동적으로 HTML 요소 생성
     const Component = as as ElementType;

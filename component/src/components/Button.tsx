@@ -1,4 +1,5 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
+import { cn } from '../utils';
 
 // 기본 HTML button 속성을 확장하는 인터페이스
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -10,6 +11,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   // 로딩 상태 (스타일링 목적)
   loading?: boolean;
+  // 너비
+  width?: number;
 }
 
 // 크기별 스타일 정의
@@ -42,22 +45,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ...props
   }, ref) => {
     // 기본 스타일 클래스 조합
-    const baseStyles = 'inline-flex items-center justify-center border rounded-md font-medium transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2';
+    const baseStyles = 'relative flex-basis-auto items-center justify-center border rounded-md font-medium transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2';
     const sizeClass = sizeStyles[size];
     const variantClass = variantStyles[variant];
     const widthClass = fullWidth ? 'w-full' : '';
     const disabledClass = (disabled || loading) ? 'opacity-50 cursor-not-allowed pointer-events-none' : '';
     
     // 최종 클래스 조합
-    const buttonClasses = [
-      baseStyles,
-      sizeClass,
-      variantClass,
-      widthClass,
-      disabledClass,
-      className
-    ].filter(Boolean).join(' ');
-
+    const buttonClasses = cn(baseStyles, sizeClass, variantClass, widthClass, disabledClass, className);
     return (
       <button
         ref={ref}
