@@ -45,7 +45,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ...props
   }, ref) => {
     // 기본 스타일 클래스 조합
-    const baseStyles = 'relative flex-basis-auto items-center justify-center border rounded-md font-medium transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2';
+    const baseStyles = 'relative w-full h-full items-center justify-center border rounded-md font-medium transition-all duration-200 outline-none focus:ring-2 focus:ring-offset-2';
     const sizeClass = sizeStyles[size];
     const variantClass = variantStyles[variant];
     const widthClass = fullWidth ? 'w-full' : '';

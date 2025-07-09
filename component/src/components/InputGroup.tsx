@@ -4,6 +4,7 @@ import Label from './Label';
 import ErrorMessage from './ErrorMessage';
 import HelperText from './HelperText';
 import LoadingSpinner from './LoadingSpinner';
+import { cn } from '../utils';
 
 interface InputGroupProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
   // 레이블
@@ -62,7 +63,7 @@ const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(
     };
 
     return (
-      <div className={`${fullWidth ? 'w-full' : ''}`}>
+      <div className={cn(fullWidth && 'w-full')}>
         {/* 레이블 */}
         {label && (
           <Label
@@ -76,10 +77,10 @@ const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(
         )}
         
         {/* Input 래퍼 */}
-        <div className="relative">
+        <div className={cn('relative')}>
           {/* Prefix 아이콘 */}
           {prefixIcon && (
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
+            <div className={cn('absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10', prefixIcon && 'w-fit')}>
               {prefixIcon}
             </div>
           )}
@@ -93,14 +94,14 @@ const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(
             variant={variant}
             fullWidth={fullWidth}
             disabled={props.disabled || loading}
-            className={`${className} ${prefixIcon ? 'pl-10' : ''} ${suffixIcon || loading ? 'pr-10' : ''}`}
+            className={cn(className, prefixIcon ? 'pl-10' : '', suffixIcon || loading ? 'pr-10' : '')}
             aria-describedby={getAriaDescribedBy()}
             {...props}
           />
           
           {/* Suffix 아이콘 또는 로딩 스피너 */}
           {(suffixIcon || loading) && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10">
+            <div className={cn('absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 z-10', suffixIcon && 'w-fit')}>
               {loading ? (
                 <LoadingSpinner size="small" />
               ) : (
