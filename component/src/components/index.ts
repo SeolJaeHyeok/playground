@@ -19,6 +19,8 @@ export { default as CompoundInput } from './CompoundInput';
 export { default as SimpleInput } from './SimpleInput';
 export { default as CompoundButton } from './CompoundButton';
 export { default as SimpleButton } from './SimpleButton';
+export { default as RenderPropsInput, BasicInputRenderer } from './RenderPropsInput';
+export { default as CompositionCard, FormSection, FlexLayout } from './CompositionCard';
 
 // Type exports
 export type { default as InputProps } from './Input';

@@ -94,15 +94,15 @@ export default function Home() {
         {/* Alternative Patterns Section */}
         <section className={cn('bg-gradient-to-r from-purple-50 to-blue-50 p-8 rounded-lg border-2 border-purple-200 mb-8')}>
           <h2 className={cn('text-2xl font-semibold text-gray-800 mb-4')}>
-            🔄 대안적 패턴들
+            🔄 다양한 컴포넌트 합성 패턴
           </h2>
           <p className={cn('text-gray-600 mb-6')}>
-            기존 구조의 문제점을 해결하는 다른 패턴들을 비교해보세요.
+            컴파운드, Render Props, Children 합성 등 5가지 패턴을 비교해보고 상황에 맞는 선택을 해보세요.
           </p>
           <Link
             to="/alternative-patterns"
             className={cn('inline-flex items-center px-6 py-3 bg-purple-200 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 font-medium')}>
-            대안적 패턴 살펴보기 →
+            합성 패턴 비교하기 →
           </Link>
         </section>
 
