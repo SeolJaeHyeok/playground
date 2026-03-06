@@ -50,8 +50,12 @@ for TARGET_DIR in "${TARGET_DIRS[@]}"; do
       continue
     fi
 
-    # 심링크 생성
-    ln -s "$item" "$target_item"
+    # 상대 경로 계산 (ex: ../.agents/항목이름)
+    # 현재 모든 대상 폴더(.cursor, .claude 등)는 루트에 있으므로 한 단계 위(..)로 가면 루트 디렉토리가 됩니다.
+    relative_target="../.agents/$name"
+
+    # 심링크 생성 (상대 경로 적용)
+    ln -s "$relative_target" "$target_item"
     echo "  ✅ Linked: $name -> $target_name/$name"
   done
 done
