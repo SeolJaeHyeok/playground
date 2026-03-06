@@ -1,0 +1,112 @@
+---
+alwaysApply: true
+---
+
+## Project Migration Status
+
+This project is currently undergoing a migration from legacy patterns to modern best practices. When making changes, prioritize the new patterns while being mindful of existing legacy code.
+
+### Directory Structure Migration
+
+**Legacy:** Folder-by-type structure (e.g., `components/`, `hooks/`, `utils/` separated)
+**Current:** Transitioning to feature-based directory structure
+**Future:** Complete feature-based organization
+
+**Guidelines:**
+- For **new features**, always use feature-based structure (e.g., `features/auth/`, `features/user-profile/`)
+- Group related components, hooks, stores, utilities, and types within the feature directory
+- When modifying existing code, consider refactoring to feature-based structure if it's a significant change
+- Maintain existing folder-by-type structure for legacy code unless explicitly refactoring
+
+**Example:**
+```
+features/
+  auth/
+    components/
+      LoginForm.tsx
+    hooks/
+      useAuth.ts
+    stores/
+      authStore.ts
+    types.ts
+    utils.ts
+```
+
+### Styling Migration
+
+**Legacy:** Global stylesheet (`src/_assets/stylesheets/common.css`), Bootstrap classes, CSS Modules
+**Current:** Transitioning to Tailwind CSS v4
+**Future:** Complete Tailwind migration, removal of global stylesheet and CSS Modules
+
+**Guidelines:**
+- For **new code**, always use Tailwind CSS classes
+- Avoid adding new styles to `common.css` - use Tailwind utilities instead
+- **Do not create new CSS Modules** - use Tailwind instead
+- CSS Modules are being removed gradually (low priority - maintain existing ones unless explicitly requested to migrate)
+- When modifying existing components with CSS Modules, consider migrating to Tailwind if feasible, but prioritize functionality over style migration
+- Do not introduce new Bootstrap dependencies or classes
+
+**Important: Root Font Size Consideration**
+- The current root font size is **10px** (not the default 16px)
+- Tailwind's pre-defined sizing classes assume a 16px root font size, so using them will produce different values than expected
+  - Example: `h-10` would be 40px with 16px root, but is actually 25px with 10px root
+- **For sizing-related properties** (width, height, gap, padding, margin, etc.), **always use explicit px values** with arbitrary values syntax
+  - Examples: `size-[16px]`, `gap-[4px]`, `w-[100px]`, `h-[40px]`, `p-[8px]`, `m-[12px]`
+- Once the styling system migration is complete, the root font size will be set to 16px, at which point pre-defined Tailwind classes can be used normally
+
+### State Management Migration
+
+**Legacy:** Redux for global state management
+**Current:** Redux removal in progress, Zustand preferred for new global state
+**Future:** Complete Redux removal, Zustand or local state only
+
+**Guidelines:**
+- **Do not use Redux** for new features
+- Prefer **local state** (useState, useReducer) when state is component-specific
+- Use **Zustand** only when state needs to be shared across multiple components or features
+- When modifying existing Redux code, consider migrating to Zustand or local state if appropriate
+- Avoid creating new Redux stores, actions, or reducers
+
+**Decision tree:**
+1. Is state only used within a single component? → Use `useState` or `useReducer`
+2. Is state shared within a feature? → Consider Zustand store scoped to that feature
+3. Is state shared across multiple features? → Use Zustand store
+4. Never use Redux for new code
+
+### Type Safety with Zod
+
+**Current:** Zod is available and should be used for runtime validation and type inference
+**Future:** Comprehensive type safety with Zod schemas
+
+**Guidelines:**
+- Use **Zod** for validating API responses, form inputs, and external data
+- Leverage Zod's type inference to generate TypeScript types (e.g., `z.infer<typeof schema>`)
+- Create Zod schemas for data structures that come from external sources (APIs, user input, localStorage)
+- Prefer Zod schemas over manual TypeScript interfaces when runtime validation is needed
+- Use Zod for form validation in combination with form libraries
+
+**Example:**
+```ts
+import { z } from 'zod';
+
+const UserSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string().email(),
+});
+
+type User = z.infer<typeof UserSchema>;
+
+// Use for API response validation
+const validateUser = (data: unknown): User => {
+  return UserSchema.parse(data);
+};
+```
+
+### General Migration Principles
+
+1. **New code first:** Always use new patterns (feature-based, Tailwind, Zustand/local state, Zod) for new features
+2. **Gradual migration:** When touching existing code, migrate to new patterns if the change is significant enough
+3. **Don't break existing:** Maintain backward compatibility during migration - don't break existing functionality
+4. **Consistency:** Within a feature or component, be consistent with the chosen pattern (don't mix old and new patterns unnecessarily)
+5. **Documentation:** When creating new features, follow the new patterns and document any deviations

@@ -1,0 +1,24 @@
+---
+description: Standards for using Axios (HTTP client) in API calls.
+alwaysApply: false
+---
+- **Centralize API calls:** Use a single configured Axios instance for all HTTP requests. For example, create `apiClient.ts` that creates an Axios instance with base URL (`axios.create({ baseURL: '/api', ... })`) and common settings (like `withCredentials` or default headers). Import and use this instance (`apiClient`) throughout the project instead of calling Axios directly. This ensures consistent timeouts, base URLs, and interceptors.
+- **Interceptors for auth & errors:** Configure Axios interceptors on the instance to handle concerns like authentication and error logging globally. For example, use a request interceptor to attach auth tokens (`Authorization` header) from the state/storage, and a response interceptor to catch 401 responses globally (e.g., redirect to login or refresh token) or to log errors. This reduces repetition of auth logic in every call and provides a single place to update if the auth mechanism changes.
+- **Async/await and error handling:** Use `async/await` syntax for readability when calling the Axios instance. Wrap calls in try/catch blocks to handle errors, or handle errors via `.catch` on the promise. For expected error responses (like validation errors), handle them gracefully in the UI. Always provide some form of error feedback to the user rather than failing silently. For example: 
+  ```ts
+  try {  
+    const response = await apiClient.get<Data>('/items');  
+    // use response.data  
+  } catch (err) {  
+    if (axios.isAxiosError(err)) {  
+      // Axios 에러인 경우, 안전하게 response 데이터에 접근할 수 있습니다.  
+      console.error(err.response?.data);  
+    }  
+    // React Query로 에러를 전파하거나 다른 처리를 합니다.  
+  }  
+  ```
+If using React Query, let it handle errors (React Query will catch and provide the error object to your component state).
+- **Type safety with responses**: Utilize TypeScript to strongly type Axios responses. Axios allows specifying a response type: apiClient.get<User[]>('/users') will type response.data as User[]. Define interfaces for API request payloads and responses, and use them consistently. This prevents mistakes (for example, assuming a field exists when it might not) and provides autocomplete for response data.
+- **Avoid repetitive code**: If multiple components or services need the same data, centralize the API call in a function or service module rather than duplicating logic. For example, create a fetchUsers() function that calls apiClient.get('/users'). This makes it easier to update the endpoint or parameters in one place. When used with React Query, you can call these service functions inside useQuery to keep things DRY.
+- **Timeouts and cancellations**: Set a reasonable default timeout on the Axios instance (if calls should not hang indefinitely, e.g., 30 seconds). For long-running requests or if the user navigates away, consider using AbortController or Axios cancellation (cancel tokens) to abort requests to avoid memory leaks or unnecessary network usage. In React components, you can cancel in a useEffect cleanup if the component unmounts before request completion.
+- **Security and data handling**: Never expose sensitive information in the client-side code (like secret keys). For any sensitive data transmission, use HTTPS and consider additional encryption if needed. Validate and sanitize inputs sent via Axios to the server to avoid injection attacks. While these are more backend concerns, the frontend should still ensure it’s sending expected, well-formed data.

@@ -1,0 +1,26 @@
+---
+description: Guidelines for using Zustand state management (preferred for new state).
+alwaysApply: false
+---
+- **When to use Zustand:** Favor **Zustand** for managing new global or shared state that doesn’t require the overhead of Redux. Zustand is lightweight and requires minimal boilerplate. Use it for state that is localized to a feature or not needed throughout the entire app, or when you want an easy way to create a store with a few values and functions.
+- **Store setup:** Create stores using `create()` from Zustand. Define a clear interface/type for the store’s state and actions. For example:
+  ```ts
+  interface AuthState {
+    user: User | null;
+  }
+  interface AuthActions {
+    login: (u: User) => void;
+    logout: () => void;
+  }
+  export const useAuthStore = create<AuthState & AuthActions>((set) => ({
+    user: null,
+    login: (u) => set({ user: u }),
+    logout: () => set({ user: null }),
+  }));
+  ```
+This pattern ensures state and actions are in one place. Do not put unrelated state in one Zustand store; create multiple stores if needed (Zustand has virtually no cost for multiple stores).
+- **Direct state updates**: Zustand allows direct mutation of state inside the setter functions (and even outside, via useAuthStore.setState, though prefer using defined actions for clarity). You don’t need actions that wrap dispatch like in Redux; simply define and use the functions from the store. For example, call useAuthStore.getState().logout() or within React components, const logout = useAuthStore(state => state.logout) and then logout(). This simplicity is an advantage – utilize it by writing straightforward state logic.
+- **Selectors to avoid re-renders**: When consuming Zustand state in a component, use the selector pattern to prevent unrelated state changes from causing re-renders. For example: const user = useAuthStore(state => state.user). If you need multiple values, you can pick them with a selector or use the shallow compare option (useAuthStore((state) => ({ a: state.a, b: state.b }), shallow)). This ensures components only re-render when the specific pieces of state they use change.
+- **Persistence and middlewares**: If some state should persist (e.g., saved to localStorage), use Zustand’s persist middleware in the store configuration. Similarly, you can use redux middleware if you want Redux DevTools or combine multiple slices. Only persist what is necessary (e.g., auth token, theme preference) and be mindful of not persisting sensitive data in plain text. For dev/debugging, you can enable Redux DevTools with a middleware without pulling in full Redux.
+- **Concurrent usage with Redux**: It’s acceptable for Redux and Zustand to co-exist. Avoid duplicating state between them. For instance, if Redux holds auth info, do not also store it in a Zustand store. Over time, consider migrating simpler slices from Redux to Zustand if it simplifies the codebase, but coordinate this carefully to not break existing functionality. In new code, lean towards Zustand for speed of development and lower maintenance overhead.
+- **Clean and simple logic**: Keep Zustand store logic simple. Since there is no strict pattern to follow (unlike Redux’s actions/types), it’s up to the developer to maintain clarity. Document within the code what each store contains and its purpose. Aim for each store to focus on one area or feature. This makes it easier to find and reason about state. Because Zustand is so flexible, enforce your own discipline: e.g., avoid using it as a dumping ground for anything and everything – still architect your state thoughtfully.

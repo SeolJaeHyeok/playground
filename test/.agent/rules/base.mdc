@@ -1,0 +1,25 @@
+---
+alwaysApply: true
+---
+
+## Technology Stack
+
+- **Framework:** React 18.2.0 with TypeScript
+- **Build tool:** Vite 5.3.1
+- **State management:** Zustand 5.0.8 (preferred for new state). Redux is being removed - do not use Redux for new features.
+- **Data fetching:** React Query (@tanstack/react-query) v5
+- **HTTP client:** Axios 1.7.2
+- **Styling:** Tailwind CSS v4 (all new styling should use Tailwind). Global stylesheet (common.css) is being removed - avoid using it for new code. CSS Modules are being removed gradually (low priority - maintain existing ones unless explicitly requested to change).
+- **Testing:** Vitest is installed but not yet configured - do not use it until setup is complete.
+- **Linting/Formatting:** Biome (extends Prettier & ESLint)
+
+## General Guidelines
+
+- **No direct AI commits:** Do not have the AI commit or push code changes to git automatically. File edits are allowed, but git commits and pushes must be done by a developer after reviewing the changes to preserve oversight and code quality.
+- **Project structure:** Organize code by **feature** rather than by type. Group related components, states, and utilities in a feature directory for better modularity (e.g. `features/auth/*` for all auth-related files). Avoid deeply nested folders; keep the structure reasonably flat and logical.
+- **File naming conventions:** Use **PascalCase** for React component filenames (e.g. `LoginForm.tsx` containing a `LoginForm` component). Use **camelCase** for hook or utility module filenames (e.g. `useAuth.ts`, `apiClient.ts`). Directory names should be **kebab-case** (e.g. `user-profile/`). Choose descriptive names that reflect each file's purpose.
+- **Code style:** Follow the Biome linter/formatter rules (which extend Prettier & ESLint). Write clean, self-explanatory code with proper **TypeScript** types. Use strict mode and avoid `any` when possible – prefer specific types or generics (`unknown` over `any` if necessary). Maintain consistent indentation and code formatting as enforced by the linter.
+- **Comments and docs:** Write comments and documentation in **Korean**, only where needed to explain complex logic or rationale. Keep comments concise and relevant. Use Korean to improve clarity and maintainability for the development team. Technical terms may be written in English when it is more natural or commonly used (e.g., "컨테이너(container)", "API 엔드포인트").
+- **Documentation maintenance:** When code is changed, always update related documentation and comments to reflect the changes. Ensure that documentation stays in sync with the codebase to prevent confusion and maintain accuracy.
+- **Summaries and descriptions:** When the AI is asked to summarize code changes (for example, in commit messages or pull request descriptions), the summary should be clear and to the point. Use **present tense** and focus on the "what" and "why" of changes. Use bullet points or numbered lists for multiple points to improve readability.
+- **Consistency and best practices:** Adhere to established patterns in the codebase. Follow **DRY** (Don't Repeat Yourself) – factor out common logic or styles instead of duplicating. Uphold **SOLID** principles when applicable (e.g. single responsibility for components and functions). Aim for code that is easy to maintain and extend.

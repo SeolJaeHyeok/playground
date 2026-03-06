@@ -1,0 +1,15 @@
+---
+description: Conventional Commit message format rules (supports Korean message text). Apply when writing commit messages.
+alwaysApply: false
+---
+- **Conventional Commits format:** Structure every commit message as `<type>(<scope>): <description>`. The `<scope>` is optional. For example: `feat(ui): 추가 로그인 버튼` or `fix: resolve null pointer exception`.
+- **Allowed types:** Use standard types such as `feat` (new feature), `fix` (bug fix), `docs` (documentation), `style` (formatting, non-functional changes), `refactor` (code refactoring), `test` (adding or fixing tests), `chore` (maintenance tasks), etc. These should be lowercase. For a breaking change, append `!` (e.g. `feat!: ...`) or include **BREAKING CHANGE:** in the footer.
+- **Scope (optional):** The scope is a noun describing the section of the code affected (such as a feature or module name). e.g. `feat(auth): ...` or `fix(profile): ...`. Use English for scope names (module or component names). If the scope is not needed, you can omit it (`feat: ...`).
+- **Description:** After the colon and space, write a brief description of the change. You **may use Korean** here for clarity among the team. Whether in Korean or English, use present-tense imperative style (e.g. "로그인 기능 추가" or "Add login feature", not "Added" or "Adding"). Keep the description concise (around 50 characters or less in length if possible).
+- **Body and footer:** If more details are needed, add a body separated by a blank line below the header. In the body, you can explain *why* the change was made or any additional context (this can also be in Korean if preferred). Wrap lines at ~72 characters. Use footers for references (e.g. `Closes #123`) or breaking change explanations. For example, a breaking change footer might be: `BREAKING CHANGE: requires database migration`.
+- **Examples:**  
+  - `feat(auth): 로그인 기능 추가` – (Feat: Add login feature)  
+  - `fix: 잘못된 API URL 수정` – (Fix: Correct the wrong API URL)  
+  - `docs(ui): README에 사용법 섹션 추가` – (Docs: Add usage section to README)  
+  Each example follows `<type>(<scope>): <description>` with the description in Korean.
+- **General guidelines:** Make sure each commit message clearly communicates what the change does. Avoid vague messages like "update code" or "fix bug". Instead, be specific (e.g. *"fix: 로그인 시 잘못된 토큰 처리 오류 수정"* – “Fix error in handling invalid token on login”). This helps others (and future you) understand changes. 

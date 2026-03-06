@@ -1,0 +1,19 @@
+---
+description: Guidelines for creating pull requests. Use the PR template when creating PRs.
+alwaysApply: false
+---
+- **Use PR template:** When creating a pull request, always use the template located at `.github/pull_request_template.md`. Fill out all relevant sections including:
+  - **작업 내용 (Work Summary):** Provide a clear summary of what feature/fix/refactoring was done
+  - **관련 이슈 (Related Issues):** Link to any related issues if applicable
+  - **논의하고 싶은 내용 (Discussion Points):** Optional section for code design, naming, logic discussions with reviewers
+  - **체크리스트 (Checklist):** Verify all items are checked before submitting
+  - **PR 특이 사항 (Special Notes):** Any additional context or notes
+- **PR size guidelines:** Keep PRs small and focused. Aim for under 300 lines when possible. Split by feature unit or purpose (e.g., style changes / API integration / error handling). This makes reviews more thorough and reduces missed mistakes.
+- **Review checklist considerations:** When preparing a PR, consider the review checklist items:
+  - Are variable/function/component names clear?
+  - Is reusable logic properly separated?
+  - Is the code type-safe?
+  - Are unnecessary comments and console.logs removed?
+  - Does styling match the design system or guidelines?
+- **PR description quality:** Write clear, descriptive PR descriptions that explain the "what" and "why" of changes. Use present tense and focus on the purpose of the changes. This helps reviewers understand the context and intent.
+- **Review attitude:** Maintain a constructive review culture. Frame feedback positively and focus on improvement suggestions rather than criticism. Both reviewers and PR authors should be able to explain their reasoning.
